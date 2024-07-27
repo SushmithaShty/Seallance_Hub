@@ -9,9 +9,12 @@ const applicationSchema = new mongoose.Schema({
     maxLength: [30, "Name cannot exceed 30 Characters!"],
   },
   status: {
-    type: Boolean,
-    default: false,
+    type: String,
+    enum: ["pending", "accepted", "rejected"],
+    default: "pending",
   },
+  // other fields...
+
   email: {
     type: String,
     required: [true, "Please enter your Email!"],

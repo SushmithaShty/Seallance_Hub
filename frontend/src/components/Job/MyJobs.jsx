@@ -83,181 +83,124 @@ const MyJobs = () => {
     );
   };
 
+  // Define common styles
+  const inputBoxStyles = {
+    position: "relative",
+    marginBottom: "15px"  // Reduced margin bottom
+  };
+
+  const inputStyles = {
+    width: "100%",
+    padding: "6px",       // Reduced padding
+    background: "transparent",
+    border: "none",
+    borderBottom: "1px solid #333", // Thinner border
+    outline: "none",
+    color: "#333",
+    fontSize: "14px"      // Smaller font size
+  };
+
+  const labelStyles = {
+    position: "absolute",
+    top: "50%",
+    left: "10px",
+    color: "#aaa",
+    pointerEvents: "none",
+    transform: "translateY(-50%)",
+    transition: "0.5s"
+  };
+
   return (
     <div className="myJobs-page" style={{ padding: "20px" }}>
       <div className="container" style={{ maxWidth: "1200px", margin: "0 auto" }}>
         <h1>Your Posted Jobs</h1>
         {myJobs.length > 0 ? (
-          <div className="jobs-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "20px" }}>
+          <div className="jobs-grid" style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
             {myJobs.map((job) => (
-              <div key={job._id} className="job-card" style={{ backgroundColor: "#f0f0f0", padding: "20px", borderRadius: "8px" }}>
+              <div key={job._id} className="job-card" style={{ backgroundColor: "#ffffff", padding: "15px", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", width: "100%" }}>
                 <div className="job-details" style={{ display: "flex", flexDirection: "column" }}>
-                  <div className="field" style={{ marginBottom: "10px" }}>
-                    <span>Title:</span>
-                    <input
-                      type="text"
-                      value={job.title}
-                      disabled={editingMode !== job._id}
-                      onChange={(e) =>
-                        handleInputChange(job._id, "title", e.target.value)
-                      }
-                      style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
-                    />
+                  <div className="fields-container" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px" }}>
+                    {['title', 'country', 'city', 'category', 'fixedSalary', 'salaryFrom', 'salaryTo', 'expired', 'description', 'location'].map((field, index) => (
+                      <div key={index} className="field" style={inputBoxStyles}>
+                        <span style={{ marginBottom: "5px", display: "block" }}>{field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}</span>
+                        {['fixedSalary', 'salaryFrom', 'salaryTo'].includes(field) ? (
+                          <input
+                            type="number"
+                            value={job[field] || ''}
+                            disabled={editingMode !== job._id}
+                            onChange={(e) =>
+                              handleInputChange(job._id, field, e.target.value)
+                            }
+                            style={inputStyles}
+                          />
+                        ) : field === 'expired' ? (
+                          <select
+                            value={job[field]}
+                            disabled={editingMode !== job._id}
+                            onChange={(e) =>
+                              handleInputChange(job._id, field, e.target.value)
+                            }
+                            style={{ ...inputStyles, border: "1px solid #ccc", padding: "4px" }}  // Reduced padding
+                          >
+                            <option value={true}>TRUE</option>
+                            <option value={false}>FALSE</option>
+                          </select>
+                        ) : field === 'description' || field === 'location' ? (
+                          <textarea
+                            rows={2}      // Reduced rows
+                            value={job[field]}
+                            disabled={editingMode !== job._id}
+                            onChange={(e) =>
+                              handleInputChange(job._id, field, e.target.value)
+                            }
+                            style={{ ...inputStyles, border: "1px solid #ccc", padding: "4px" }}  // Reduced padding
+                          />
+                        ) : (
+                          <input
+                            type="text"
+                            value={job[field] || ''}
+                            disabled={editingMode !== job._id}
+                            onChange={(e) =>
+                              handleInputChange(job._id, field, e.target.value)
+                            }
+                            style={inputStyles}
+                          />
+                        )}
+                      </div>
+                    ))}
                   </div>
-                  <div className="field" style={{ marginBottom: "10px" }}>
-                    <span>Country:</span>
-                    <input
-                      type="text"
-                      value={job.country}
-                      disabled={editingMode !== job._id}
-                      onChange={(e) =>
-                        handleInputChange(job._id, "country", e.target.value)
-                      }
-                      style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
-                    />
-                  </div>
-                  <div className="field" style={{ marginBottom: "10px" }}>
-                    <span>City:</span>
-                    <input
-                      type="text"
-                      value={job.city}
-                      disabled={editingMode !== job._id}
-                      onChange={(e) =>
-                        handleInputChange(job._id, "city", e.target.value)
-                      }
-                      style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
-                    />
-                  </div>
-                  <div className="field" style={{ marginBottom: "10px" }}>
-                    <span>Category:</span>
-                    <select
-                      value={job.category}
-                      disabled={editingMode !== job._id}
-                      onChange={(e) =>
-                        handleInputChange(job._id, "category", e.target.value)
-                      }
-                      style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
-                    >
-                      <option value="Graphics & Design">Graphics & Design</option>
-                      <option value="Mobile App Development">Mobile App Development</option>
-                      <option value="Frontend Web Development">Frontend Web Development</option>
-                      <option value="MERN Stack Development">MERN Stack Development</option>
-                      <option value="Account & Finance">Account & Finance</option>
-                      <option value="Artificial Intelligence">Artificial Intelligence</option>
-                      <option value="Video Animation">Video Animation</option>
-                      <option value="MEAN Stack Development">MEAN Stack Development</option>
-                      <option value="MEVN Stack Development">MEVN Stack Development</option>
-                      <option value="Data Entry Operator">Data Entry Operator</option>
-                    </select>
-                  </div>
-                  <div className="field" style={{ marginBottom: "10px" }}>
-                    <span>Salary:</span>
-                    {job.fixedSalary ? (
-                      <input
-                        type="number"
-                        value={job.fixedSalary}
-                        disabled={editingMode !== job._id}
-                        onChange={(e) =>
-                          handleInputChange(job._id, "fixedSalary", e.target.value)
-                        }
-                        style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
-                      />
-                    ) : (
-                      <>
-                        <input
-                          type="number"
-                          value={job.salaryFrom}
-                          disabled={editingMode !== job._id}
-                          onChange={(e) =>
-                            handleInputChange(job._id, "salaryFrom", e.target.value)
-                          }
-                          style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc", marginBottom: "10px" }}
-                        />
-                        <input
-                          type="number"
-                          value={job.salaryTo}
-                          disabled={editingMode !== job._id}
-                          onChange={(e) =>
-                            handleInputChange(job._id, "salaryTo", e.target.value)
-                          }
-                          style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
-                        />
-                      </>
-                    )}
-                  </div>
-                  <div className="field" style={{ marginBottom: "10px" }}>
-                    <span>Expired:</span>
-                    <select
-                      value={job.expired}
-                      disabled={editingMode !== job._id}
-                      onChange={(e) =>
-                        handleInputChange(job._id, "expired", e.target.value)
-                      }
-                      style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
-                    >
-                      <option value={true}>TRUE</option>
-                      <option value={false}>FALSE</option>
-                    </select>
-                  </div>
-                  <div className="field" style={{ marginBottom: "10px" }}>
-                    <span>Description:</span>
-                    <textarea
-                      rows={5}
-                      value={job.description}
-                      disabled={editingMode !== job._id}
-                      onChange={(e) =>
-                        handleInputChange(job._id, "description", e.target.value)
-                      }
-                      style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
-                    />
-                  </div>
-                  <div className="field" style={{ marginBottom: "10px" }}>
-                    <span>Location:</span>
-                    <textarea
-                      rows={5}
-                      value={job.location}
-                      disabled={editingMode !== job._id}
-                      onChange={(e) =>
-                        handleInputChange(job._id, "location", e.target.value)
-                      }
-                      style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
-                    />
-                  </div>
-                  
                 </div>
-                <div className="job-actions" style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+                <div className="job-actions" style={{ marginTop: "15px", textAlign: "right" }}>
                   {editingMode === job._id ? (
                     <>
                       <button
+                        className="btn-save"
                         onClick={() => handleUpdateJob(job._id)}
-                        className="btn btn-success"
-                        style={{ display: "flex", alignItems: "center", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#28a745", color: "#fff", border: "none", cursor: "pointer" }}
+                        style={{ padding: "8px 16px", backgroundColor: "#4caf50", color: "#ffffff", border: "none", borderRadius: "4px", cursor: "pointer", marginRight: "8px" }}  // Reduced padding
                       >
-                        <FaCheck style={{ marginRight: "5px" }} />
-                        Update
+                        <FaCheck />
                       </button>
                       <button
+                        className="btn-cancel"
                         onClick={handleDisableEdit}
-                        className="btn btn-danger"
-                        style={{ display: "flex", alignItems: "center", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#dc3545", color: "#fff", border: "none", cursor: "pointer" }}
+                        style={{ padding: "8px 16px", backgroundColor: "#f44336", color: "#ffffff", border: "none", borderRadius: "4px", cursor: "pointer" }}  // Reduced padding
                       >
-                        <RiCloseLine style={{ marginRight: "5px" }} />
-                        Cancel
+                        <RiCloseLine />
                       </button>
                     </>
                   ) : (
                     <>
                       <button
+                        className="btn-edit"
                         onClick={() => handleEnableEdit(job._id)}
-                        className="btn btn-primary"
-                        style={{ display: "flex", alignItems: "center", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#007bff", color: "#fff", border: "none", cursor: "pointer" }}
+                        style={{ padding: "8px 16px", backgroundColor: "#2196f3", color: "#ffffff", border: "none", borderRadius: "4px", cursor: "pointer", marginRight: "8px" }}  // Reduced padding
                       >
                         Edit
                       </button>
                       <button
+                        className="btn-delete"
                         onClick={() => handleDeleteJob(job._id)}
-                        className="btn btn-danger"
-                        style={{ display: "flex", alignItems: "center", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#dc3545", color: "#fff", border: "none", cursor: "pointer" }}
+                        style={{ padding: "8px 16px", backgroundColor: "#f44336", color: "#ffffff", border: "none", borderRadius: "4px", cursor: "pointer" }}  // Reduced padding
                       >
                         Delete
                       </button>
@@ -268,7 +211,7 @@ const MyJobs = () => {
             ))}
           </div>
         ) : (
-          <p>No jobs found.</p>
+          <p>No jobs posted yet.</p>
         )}
       </div>
     </div>

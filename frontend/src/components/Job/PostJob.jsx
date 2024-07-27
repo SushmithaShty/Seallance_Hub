@@ -57,6 +57,7 @@ const PostJob = () => {
     }
   }, [isAuthorized, user, navigate]);
 
+  // Define common styles
   const formControlStyle = {
     marginBottom: "1rem",
     padding: "10px",
@@ -79,6 +80,12 @@ const PostJob = () => {
     cursor: 'pointer',
   };
 
+  const gridContainerStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '1rem',
+  };
+
   return (
     <section className="authPage d-flex justify-content-center align-items-center min-vh-100">
       <div className="container">
@@ -89,125 +96,127 @@ const PostJob = () => {
               <div className="line" style={{ marginTop: '0' }}></div>
             </div>
             <form onSubmit={handleJobPost}>
-              <div className="form-group" style={formControlStyle}>
-                <label htmlFor="title" style={labelStyle}>Job Title</label>
-                <input
-                  type="text"
-                  id="title"
-                  className="form-control"
-                  placeholder="Job Title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </div>
-              <div className="form-group" style={formControlStyle}>
-                <label htmlFor="category" style={labelStyle}>Category</label>
-                <select
-                  id="category"
-                  className="form-control"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  <option value="">Select Category</option>
-                  <option value="Graphics & Design">Graphics & Design</option>
-                  <option value="Mobile App Development">Mobile App Development</option>
-                  <option value="Frontend Web Development">Frontend Web Development</option>
-                  <option value="MERN Stack Development">MERN Stack Development</option>
-                  <option value="Account & Finance">Account & Finance</option>
-                  <option value="Artificial Intelligence">Artificial Intelligence</option>
-                  <option value="Video Animation">Video Animation</option>
-                  <option value="MEAN Stack Development">MEAN Stack Development</option>
-                  <option value="MEVN Stack Development">MEVN Stack Development</option>
-                  <option value="Data Entry Operator">Data Entry Operator</option>
-                </select>
-              </div>
-              <div className="form-group" style={formControlStyle}>
-                <label htmlFor="country" style={labelStyle}>Country</label>
-                <input
-                  type="text"
-                  id="country"
-                  className="form-control"
-                  placeholder="Country"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                />
-              </div>
-              <div className="form-group" style={formControlStyle}>
-                <label htmlFor="city" style={labelStyle}>City</label>
-                <input
-                  type="text"
-                  id="city"
-                  className="form-control"
-                  placeholder="City"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                />
-              </div>
-              <div className="form-group" style={formControlStyle}>
-                <label htmlFor="location" style={labelStyle}>Location</label>
-                <input
-                  type="text"
-                  id="location"
-                  className="form-control"
-                  placeholder="Location"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                />
-              </div>
-              <div className="form-group" style={formControlStyle}>
-                <label htmlFor="salaryType" style={labelStyle}>Salary Type</label>
-                <select
-                  id="salaryType"
-                  className="form-control"
-                  value={salaryType}
-                  onChange={(e) => setSalaryType(e.target.value)}
-                >
-                  <option value="default">Select Salary Type</option>
-                  <option value="Fixed Salary">Fixed Salary</option>
-                  <option value="Ranged Salary">Ranged Salary</option>
-                </select>
-              </div>
-
-              {salaryType === "Fixed Salary" && (
+              <div style={gridContainerStyle}>
                 <div className="form-group" style={formControlStyle}>
-                  <label htmlFor="fixedSalary" style={labelStyle}>Fixed Salary</label>
+                  <label htmlFor="title" style={labelStyle}>Job Title</label>
                   <input
-                    type="number"
-                    id="fixedSalary"
+                    type="text"
+                    id="title"
                     className="form-control"
-                    placeholder="Fixed Salary"
-                    value={fixedSalary}
-                    onChange={(e) => setFixedSalary(e.target.value)}
+                    placeholder="Job Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                   />
                 </div>
-              )}
+                <div className="form-group" style={formControlStyle}>
+                  <label htmlFor="category" style={labelStyle}>Category</label>
+                  <select
+                    id="category"
+                    className="form-control"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                  >
+                    <option value="">Select Category</option>
+                    <option value="Graphics & Design">Graphics & Design</option>
+                    <option value="Mobile App Development">Mobile App Development</option>
+                    <option value="Frontend Web Development">Frontend Web Development</option>
+                    <option value="MERN Stack Development">MERN Stack Development</option>
+                    <option value="Account & Finance">Account & Finance</option>
+                    <option value="Artificial Intelligence">Artificial Intelligence</option>
+                    <option value="Video Animation">Video Animation</option>
+                    <option value="MEAN Stack Development">MEAN Stack Development</option>
+                    <option value="MEVN Stack Development">MEVN Stack Development</option>
+                    <option value="Data Entry Operator">Data Entry Operator</option>
+                  </select>
+                </div>
+                <div className="form-group" style={formControlStyle}>
+                  <label htmlFor="country" style={labelStyle}>Country</label>
+                  <input
+                    type="text"
+                    id="country"
+                    className="form-control"
+                    placeholder="Country"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                  />
+                </div>
+                <div className="form-group" style={formControlStyle}>
+                  <label htmlFor="city" style={labelStyle}>City</label>
+                  <input
+                    type="text"
+                    id="city"
+                    className="form-control"
+                    placeholder="City"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  />
+                </div>
+                <div className="form-group" style={formControlStyle}>
+                  <label htmlFor="location" style={labelStyle}>Location</label>
+                  <input
+                    type="text"
+                    id="location"
+                    className="form-control"
+                    placeholder="Location"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
+                </div>
+                <div className="form-group" style={formControlStyle}>
+                  <label htmlFor="salaryType" style={labelStyle}>Salary Type</label>
+                  <select
+                    id="salaryType"
+                    className="form-control"
+                    value={salaryType}
+                    onChange={(e) => setSalaryType(e.target.value)}
+                  >
+                    <option value="default">Select Salary Type</option>
+                    <option value="Fixed Salary">Fixed Salary</option>
+                    <option value="Ranged Salary">Ranged Salary</option>
+                  </select>
+                </div>
 
-              {salaryType === "Ranged Salary" && (
-                <>
+                {salaryType === "Fixed Salary" && (
                   <div className="form-group" style={formControlStyle}>
-                    <label htmlFor="salaryFrom" style={labelStyle}>Salary From</label>
+                    <label htmlFor="fixedSalary" style={labelStyle}>Fixed Salary</label>
                     <input
                       type="number"
-                      id="salaryFrom"
+                      id="fixedSalary"
                       className="form-control"
-                      placeholder="Salary From"
-                      value={salaryFrom}
-                      onChange={(e) => setSalaryFrom(e.target.value)}
+                      placeholder="Fixed Salary"
+                      value={fixedSalary}
+                      onChange={(e) => setFixedSalary(e.target.value)}
                     />
                   </div>
-                  <div className="form-group" style={formControlStyle}>
-                    <label htmlFor="salaryTo" style={labelStyle}>Salary To</label>
-                    <input
-                      type="number"
-                      id="salaryTo"
-                      className="form-control"
-                      placeholder="Salary To"
-                      value={salaryTo}
-                      onChange={(e) => setSalaryTo(e.target.value)}
-                    />
-                  </div>
-                </>
-              )}
+                )}
+
+                {salaryType === "Ranged Salary" && (
+                  <>
+                    <div className="form-group" style={formControlStyle}>
+                      <label htmlFor="salaryFrom" style={labelStyle}>Salary From</label>
+                      <input
+                        type="number"
+                        id="salaryFrom"
+                        className="form-control"
+                        placeholder="Salary From"
+                        value={salaryFrom}
+                        onChange={(e) => setSalaryFrom(e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group" style={formControlStyle}>
+                      <label htmlFor="salaryTo" style={labelStyle}>Salary To</label>
+                      <input
+                        type="number"
+                        id="salaryTo"
+                        className="form-control"
+                        placeholder="Salary To"
+                        value={salaryTo}
+                        onChange={(e) => setSalaryTo(e.target.value)}
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
 
               <div className="form-group" style={formControlStyle}>
                 <label htmlFor="description" style={labelStyle}>Job Description</label>

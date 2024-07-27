@@ -9,6 +9,7 @@ const Navbar = () => {
   const { isAuthorized, setIsAuthorized, user } = useContext(Context);
   const navigateTo = useNavigate();
 
+
   const handleLogout = async () => {
     try {
       const response = await axios.get("http://localhost:4000/api/v1/user/logout", {
@@ -16,12 +17,21 @@ const Navbar = () => {
       });
       toast.success(response.data.message);
       setIsAuthorized(false);
+      // Set a timeout to reload the page after navigating to the login page
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+  
       navigateTo("/login");
+      
+       // 100 milliseconds delay
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "An error occurred");
       setIsAuthorized(true);
     }
   };
+  
+
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);

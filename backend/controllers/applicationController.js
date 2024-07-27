@@ -4,8 +4,7 @@ import ErrorHandler from "../middleware/error.js";
 import { Application } from "../models/applicationSchema.js";
 import { Job } from "../models/jobSchema.js";
 import cloudinary from 'cloudinary'
-import { toast } from 'react-hot-toast';
-import axios from "axios";
+
 
 export const postApplication = catchAsyncErrors(async (req, res, next) => {
   const { role } = req.user;
@@ -152,7 +151,7 @@ export const acceptApplication = async (req, res, next) => {
       return next(new ErrorHandler("Application not found!", 404));
     }
 
-    application.status = true; // Assuming `accepted` is a boolean field
+    application.status = "accepted";
     await application.save();
 
     res.status(200).json({
@@ -169,9 +168,6 @@ export const acceptApplication = async (req, res, next) => {
   }
 };
 
-
-
-
 export const rejectApplication = async (req, res, next) => {
   try {
     console.log(req.params);
@@ -183,7 +179,7 @@ export const rejectApplication = async (req, res, next) => {
       return next(new ErrorHandler("Application not found!", 404));
     }
 
-    application.status = false; // Assuming `rejected` is represented by a false boolean field
+    application.status = "rejected";
     await application.save();
 
     res.status(200).json({
@@ -199,4 +195,3 @@ export const rejectApplication = async (req, res, next) => {
     });
   }
 };
-

@@ -27,7 +27,6 @@ const MyApplications = () => {
         toast.error(error.response?.data?.message || "An error occurred");
       }
     };
-    
 
     if (user) {
       fetchApplications();
@@ -51,11 +50,8 @@ const MyApplications = () => {
   };
 
   const acceptApplication = async (id) => {
-    console.log("hello...")
     try {
-      console.log(id)
-      const res = await axios.put(`http://localhost:4000/api/v1/application/accept/${id}`,{} ,{ withCredentials: true });
-      console.log(res)
+      const res = await axios.put(`http://localhost:4000/api/v1/application/accept/${id}`, {}, { withCredentials: true });
       toast.success(res.data.message);
       setApplications((prevApplications) =>
         prevApplications.map((application) =>
@@ -63,7 +59,6 @@ const MyApplications = () => {
         )
       );
     } catch (error) {
-      console.log("hello...")
       toast.error(error.response?.data?.message || "An error occurred");
     }
   };
@@ -81,7 +76,6 @@ const MyApplications = () => {
       toast.error(error.response?.data?.message || "An error occurred");
     }
   };
-  
 
   const openModal = (imageUrl) => {
     setResumeImageUrl(imageUrl);
@@ -140,17 +134,20 @@ export default MyApplications;
 
 
 const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
-  // Function to determine the status color based on the application status
   const getStatusColor = (status) => {
-    switch (status) {
-      case 'Pending':
-        return 'orange';
-      case 'Approved':
-        return 'green';
-      case 'Rejected':
-        return 'red';
-      default:
-        return 'gray';
+    if (status === "accepted") {
+      return "green";
+    } else if (status === "rejected") {
+      return "red";
+    } else {
+      return "gray";
+    }
+  };
+
+  const handleDeleteClick = (id) => {
+    const confirmed = window.confirm("Are you sure you want to delete this application?");
+    if (confirmed) {
+      deleteApplication(id);
     }
   };
 
@@ -158,21 +155,11 @@ const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
     <>
       <div className="job_seeker_card">
         <div className="detail">
-          <p>
-            <span>Name:</span> {element.name}
-          </p>
-          <p>
-            <span>Email:</span> {element.email}
-          </p>
-          <p>
-            <span>Phone:</span> {element.phone}
-          </p>
-          <p>
-            <span>Address:</span> {element.address}
-          </p>
-          <p>
-            <span>CoverLetter:</span> {element.coverLetter}
-          </p>
+          <p><span>Name:</span> {element.name}</p>
+          <p><span>Email:</span> {element.email}</p>
+          <p><span>Phone:</span> {element.phone}</p>
+          <p><span>Address:</span> {element.address}</p>
+          <p><span>CoverLetter:</span> {element.coverLetter}</p>
         </div>
         <div className="resume">
           <img
@@ -182,18 +169,28 @@ const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
           />
         </div>
         <div className="btn_area">
-          <button onClick={() => deleteApplication(element._id)}>
+          <button
+            onClick={() => handleDeleteClick(element._id)}
+            style={{
+              padding: "5px 10px",
+              backgroundColor: "#ffcccc",
+              color: "#000",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
             Delete Application
           </button>
         </div>
         <div
           style={{
-            marginTop: '10px',
-            padding: '5px',
-            borderRadius: '5px',
+            marginTop: "10px",
+            padding: "5px",
+            borderRadius: "5px",
             backgroundColor: getStatusColor(element.status),
-            color: 'white',
-            textAlign: 'center',
+            color: "white",
+            textAlign: "center",
           }}
         >
           Status: {element.status}
@@ -204,46 +201,21 @@ const JobSeekerCard = ({ element, deleteApplication, openModal }) => {
 };
 
 
-
-const EmployerCard = ({ element, openModal, rejectApplication }) => {
-  const [status, setStatus] = useState(element.status); // Assuming `status` field in your data
+const EmployerCard = ({ element, openModal, acceptApplication, rejectApplication }) => {
+  const [status, setStatus] = useState(element.status);
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
-
-   const acceptApplication = async (id) => {
-    console.log("CLICKED.......");
-    console.log(id);
-
-    try {
-      const res = await axios.put(`http://localhost:4000/api/v1/application/accept/${id}`, {}, { withCredentials: true });
-      console.log(res)
-      console.log("Accept Response:", res.data); // Add this line
-  
-      toast.success(res.data.message);
-      setApplications((prevApplications) =>
-        prevApplications.map((application) =>
-          application._id === id ? { ...application, status: 'Approved' } : application
-        )
-      );
-    } catch (error) {
-      console.error("Accept Application Error:", error);
-      toast.error(error.response?.data?.message || "An error occurred");
-    }
-  };
-
   const handleAccept = () => {
-    console.log("CLICKED..")
     acceptApplication(element._id);
-    setStatus("Approved");
+    setStatus("accepted");
     setButtonsDisabled(true);
   };
-  
+
   const handleReject = () => {
     rejectApplication(element._id);
-    setStatus("Rejected");
+    setStatus("rejected");
     setButtonsDisabled(true);
   };
-  
 
   return (
     <div className="job_seeker_card">
@@ -264,32 +236,32 @@ const EmployerCard = ({ element, openModal, rejectApplication }) => {
       <div className="actions" style={{ marginTop: "20px" }}>
         <button
           onClick={handleAccept}
-          disabled={buttonsDisabled || status === "Approved"}
+          disabled={buttonsDisabled || status === "accepted"}
           style={{
             padding: "10px 20px",
-            backgroundColor: buttonsDisabled || status === "Approved" ? "gray" : "green",
+            backgroundColor: buttonsDisabled || status === "accepted" ? "gray" : "green",
             color: "#fff",
             border: "none",
             borderRadius: "4px",
-            cursor: buttonsDisabled || status === "Approved" ? "not-allowed" : "pointer",
+            cursor: buttonsDisabled || status === "accepted" ? "not-allowed" : "pointer",
             marginRight: "10px",
-            opacity: buttonsDisabled || status === "Approved" ? 0.6 : 1,
+            opacity: buttonsDisabled || status === "accepted" ? 0.6 : 1,
           }}
         >
           Accept
         </button>
         <button
           onClick={handleReject}
-          disabled={buttonsDisabled || status === "Rejected"}
+          disabled={buttonsDisabled || status === "rejected"}
           style={{
             padding: "10px 20px",
-            backgroundColor: buttonsDisabled || status === "Rejected" ? "gray" : "turquoise",
+            backgroundColor: buttonsDisabled || status === "rejected" ? "gray" : "turquoise",
             color: "#fff",
             border: "none",
             borderRadius: "4px",
-            cursor: buttonsDisabled || status === "Rejected" ? "not-allowed" : "pointer",
+            cursor: buttonsDisabled || status === "rejected" ? "not-allowed" : "pointer",
             marginRight: "10px",
-            opacity: buttonsDisabled || status === "Rejected" ? 0.6 : 1,
+            opacity: buttonsDisabled || status === "rejected" ? 0.6 : 1,
           }}
         >
           Reject
@@ -298,9 +270,3 @@ const EmployerCard = ({ element, openModal, rejectApplication }) => {
     </div>
   );
 };
-
-
-
-
-
-
