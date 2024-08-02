@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../../main";
 import axios from "axios";
@@ -6,9 +6,15 @@ import toast from "react-hot-toast";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { isAuthorized, setIsAuthorized, user } = useContext(Context);
+  const { isAuthorized, setIsAuthorized, user, setUser } = useContext(Context);
+  const [role, setRole] = useState("");
   const navigateTo = useNavigate();
 
+  useEffect(() => {
+    if (user) {
+      setRole(user.role);
+    }
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -17,21 +23,13 @@ const Navbar = () => {
       });
       toast.success(response.data.message);
       setIsAuthorized(false);
-      // Set a timeout to reload the page after navigating to the login page
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
-  
+      setUser(null);
       navigateTo("/login");
-      
-       // 100 milliseconds delay
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
       setIsAuthorized(true);
     }
   };
-  
-
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -60,7 +58,7 @@ const Navbar = () => {
               }}
               style={{ color: '#333333', fontSize: '1rem', fontWeight: '500', marginRight: '1rem' }}
             >
-             | HOME |
+              | HOME |
             </button>
             <button
               className="btn"
@@ -70,7 +68,7 @@ const Navbar = () => {
               }}
               style={{ color: '#333333', fontSize: '1rem', fontWeight: '500', marginRight: '1rem' }}
             >
-            | ALL JOBS |
+              | ALL JOBS |
             </button>
             <button
               className="btn"
@@ -80,11 +78,11 @@ const Navbar = () => {
               }}
               style={{ color: '#333333', fontSize: '1rem', fontWeight: '500', marginRight: '1rem' }}
             >
-              {user && user.role === "Employer"
+              {user && role === "Employer"
                 ? "| APPLICANT'S APPLICATIONS |"
                 : "| MY APPLICATIONS |"}
             </button>
-            {user && user.role === "Employer" && (
+            {user && role === "Employer" && (
               <>
                 <button
                   className="btn"
@@ -94,7 +92,7 @@ const Navbar = () => {
                   }}
                   style={{ color: '#333333', fontSize: '1rem', fontWeight: '500', marginRight: '1rem' }}
                 >
-                | POST NEW JOB |
+                  | POST NEW JOB |
                 </button>
                 <button
                   className="btn"
@@ -104,7 +102,7 @@ const Navbar = () => {
                   }}
                   style={{ color: '#333333', fontSize: '1rem', fontWeight: '500' }}
                 >
-                | VIEW YOUR JOBS |
+                  | VIEW YOUR JOBS |
                 </button>
               </>
             )}
@@ -115,22 +113,21 @@ const Navbar = () => {
             {isAuthorized && user && (
               <div className="position-relative">
                 <button
-  className="btn ms-3"
-  onClick={toggleDropdown}
-  style={{
-    fontSize: '1rem', // Increased font size
-    fontWeight: '600', // Increased font weight for bolder text
-    color: '#333333', // Dark gray text color
-    backgroundColor: 'transparent', // Ensures no background color
-    border: 'none', // Removes border
-    padding: '0.5rem 1rem', // Adjust padding as needed
-    borderRadius: '0.25rem', // Rounded corners
-    fontStyle: 'italic' // Italic text style
-  }}
->
-  Hello, {user.name}
-</button>
-
+                  className="btn ms-3"
+                  onClick={toggleDropdown}
+                  style={{
+                    fontSize: '1rem', // Increased font size
+                    fontWeight: '600', // Increased font weight for bolder text
+                    color: '#333333', // Dark gray text color
+                    backgroundColor: 'transparent', // Ensures no background color
+                    border: 'none', // Removes border
+                    padding: '0.5rem 1rem', // Adjust padding as needed
+                    borderRadius: '0.25rem', // Rounded corners
+                    fontStyle: 'italic' // Italic text style
+                  }}
+                >
+                  Hello, {user.name}
+                </button>
 
                 {dropdownOpen && (
                   <div
@@ -168,16 +165,11 @@ const Navbar = () => {
             <div className="card-body p-3">
               <div className="d-flex">
                 <div className="flex-shrink-0">
-                  {/* <img
-                    src={user.profileImg || "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"}
-                    alt="Profile"
-                    className="img-fluid"
-                    style={{ width: '80px', borderRadius: '10px' }}
-                  /> */}
+              
                 </div>
                 <div className="flex-grow-1 ms-3">
                   <h5 className="mb-1" style={{ fontSize: '1rem', fontWeight: 'bold', color: '#333333' }}>{user.name}</h5>
-                  <p className="mb-2 pb-1" style={{ fontSize: '0.875rem', color: 'gray' }}>{user.role}</p>
+                  <p className="mb-2 pb-1" style={{ fontSize: '0.875rem', color: 'gray' }}>{role}</p>
                   <div className="d-flex pt-1">
                     <button
                       type="button"

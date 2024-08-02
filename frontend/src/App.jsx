@@ -37,7 +37,7 @@ const App = () => {
       } catch (error) {
         setIsAuthorized(false);
       } finally {
-        setLoading(false); // Set loading to false once the request completes
+        setLoading(false);
       }
     };
     fetchUser();
@@ -48,15 +48,15 @@ const App = () => {
     if (location.pathname === "/home") {
       interval = setInterval(() => {
         window.location.reload();
-      }, 60000); // Refresh every 60 seconds
+      }, 10000); // Refresh every 60 seconds
     }
-    return () => clearInterval(interval); // Clear the interval when the component unmounts or pathname changes
+    return () => clearInterval(interval);
   }, [location.pathname]);
 
   const noNavbarRoutes = ["/login", "/register"];
 
   if (loading) {
-    return <div>Loading...</div>; // Show a loading state while fetching user data
+    return <div>Loading...</div>;
   }
 
   return (

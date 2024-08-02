@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../../main";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const ProfileUpdate = () => {
   const { user, isAuthorized, setIsAuthorized } = useContext(Context);
+  const navigateTo = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -164,7 +165,21 @@ const ProfileUpdate = () => {
                 }}
               />
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <button
+                type="button"
+                onClick={() => navigateTo("/")}
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                }}
+              >
+                Home
+              </button>
               <button
                 type="submit"
                 style={{
